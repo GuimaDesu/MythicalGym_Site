@@ -1,0 +1,195 @@
+.nav {
+  position: fixed;
+  top: clamp(10px, 1.4vh, 16px);
+  right: calc(var(--frame-inset) + 10px);
+  left: calc(var(--frame-inset) + 10px);
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: clamp(14px, 3vw, 40px);
+  height: clamp(56px, 7vh, 66px);
+  padding: 0 clamp(16px, 2vw, 26px);
+  overflow: hidden;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: rgba(9, 9, 8, 0);
+  opacity: 0;
+  transform: translate3d(0, -140%, 0) scale(0.97);
+  pointer-events: none;
+  transition:
+    opacity 0.45s ease,
+    transform 0.75s var(--ease-out-expo),
+    background-color 0.5s ease,
+    border-color 0.5s ease;
+}
+
+/* Floating liquid-glass capsule. */
+.nav[data-visible='true'] {
+  border-color: var(--glass-edge);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0.014) 42%, rgba(9, 9, 8, 0.3) 100%),
+    rgba(9, 9, 8, 0.55);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.24),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.05),
+    0 30px 60px -34px rgba(0, 0, 0, 0.95);
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+  pointer-events: auto;
+  backdrop-filter: blur(26px) saturate(1.7) brightness(1.12);
+  -webkit-backdrop-filter: blur(26px) saturate(1.7) brightness(1.12);
+}
+
+/* Specular sweep travelling across the capsule with the page. */
+.nav[data-visible='true']::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    100deg,
+    rgba(255, 255, 255, 0.16) 0%,
+    rgba(255, 255, 255, 0.03) 22%,
+    rgba(255, 255, 255, 0) 46%,
+    rgba(199, 166, 107, calc(0.05 + var(--scroll) * 0.16)) 100%
+  );
+  pointer-events: none;
+}
+
+.progress {
+  position: absolute;
+  right: auto;
+  bottom: 0;
+  left: 0;
+  width: calc(var(--scroll) * 100%);
+  height: 2px;
+  border-radius: 0 2px 2px 0;
+  background: linear-gradient(90deg, var(--bronze) 0%, var(--bronze-soft) 60%, rgba(236, 230, 217, 0.9) 100%);
+  box-shadow: 0 0 12px rgba(199, 166, 107, 0.55);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  text-decoration: none;
+}
+
+.mark {
+  width: auto;
+  height: clamp(24px, 3.2vh, 32px);
+}
+
+.wordmark {
+  color: var(--bone);
+  font-family: var(--font-display);
+  font-size: clamp(0.8rem, 1.35vw, 1rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+.links {
+  display: flex;
+  gap: clamp(12px, 2.2vw, 30px);
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+  scrollbar-width: none;
+}
+
+.links::-webkit-scrollbar {
+  display: none;
+}
+
+.link {
+  position: relative;
+  display: block;
+  padding: 0.45rem 0;
+  color: var(--muted);
+  font-family: var(--font-sans);
+  font-size: 0.625rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.2em;
+  text-decoration: none;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: color 0.35s ease;
+}
+
+.link::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  background: var(--bronze);
+  transform: scaleX(0);
+  transform-origin: right center;
+  transition: transform 0.5s var(--ease-out-expo);
+}
+
+.link:hover {
+  color: var(--bone);
+}
+
+.link:hover::after {
+  transform: scaleX(1);
+  transform-origin: left center;
+}
+
+.cta {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.72rem 1.15rem;
+  border: 1px solid var(--line);
+  color: var(--bone-soft);
+  font-family: var(--font-sans);
+  font-size: 0.625rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.2em;
+  text-decoration: none;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition:
+    background-color 0.45s ease,
+    border-color 0.45s ease,
+    color 0.45s ease;
+}
+
+.cta:hover {
+  border-color: var(--bronze);
+  background: var(--bronze);
+  color: var(--ink);
+}
+
+@media (max-width: 760px) {
+  .nav {
+    gap: clamp(10px, 3vw, 18px);
+    padding: 0 clamp(12px, 3vw, 20px);
+  }
+
+  .wordmark {
+    display: none;
+  }
+
+  .links {
+    justify-content: flex-start;
+    margin: 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    mask-image: linear-gradient(90deg, #000 0%, #000 84%, rgba(0, 0, 0, 0) 100%);
+    -webkit-mask-image: linear-gradient(90deg, #000 0%, #000 84%, rgba(0, 0, 0, 0) 100%);
+  }
+}
+
+@media (max-width: 540px) {
+  .cta {
+    display: none;
+  }
+}

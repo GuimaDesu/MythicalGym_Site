@@ -1,0 +1,48 @@
+.track {
+  --mask: 0.12;
+}
+
+.headline {
+  max-width: 18ch;
+  font-size: clamp(2.1rem, 6.4vw, 5.6rem);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+}
+
+.word {
+  /* 0 while the line is still ahead of the scroll, 1 once it has been read. */
+  --lit: clamp(0, calc((var(--pin) * (var(--n) + 7) - var(--i)) * 0.4), 1);
+
+  display: inline-block;
+  opacity: calc(var(--mask) + (1 - var(--mask)) * var(--lit));
+  transform: translate3d(0, calc((1 - var(--lit)) * 0.3em), 0);
+  will-change: transform, opacity;
+}
+
+.foot {
+  --k: clamp(0, calc((var(--pin) - 0.58) * 5), 1);
+
+  display: grid;
+  gap: clamp(14px, 2vh, 22px);
+  max-width: 60ch;
+  margin-top: clamp(26px, 4.4vh, 54px);
+}
+
+.hair {
+  display: block;
+  width: min(38vw, 300px);
+  height: 1px;
+  background: linear-gradient(90deg, var(--bronze) 0%, rgba(199, 166, 107, 0) 100%);
+  transform: scaleX(clamp(0, calc((var(--pin) - 0.42) * 3.2), 1));
+  transform-origin: left center;
+}
+
+.note {
+  margin: 0;
+  color: var(--muted);
+  font-size: clamp(0.875rem, 1vw, 1rem);
+  line-height: 1.8;
+  opacity: var(--k);
+  transform: translate3d(0, calc((1 - var(--k)) * 14px), 0);
+}
+

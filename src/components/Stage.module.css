@@ -1,0 +1,380 @@
+.stage {
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  align-items: center;
+  /* Keeps the hero at exactly one viewport once the page grows taller. */
+  min-height: calc(100svh - var(--header-height));
+  overflow: hidden;
+  opacity: calc(1 - clamp(0, (var(--pin) - 0.18) * 2.4, 1));
+}
+
+.thread {
+  position: relative;
+  display: block;
+  flex: 0 0 clamp(36px, 7vh, 72px);
+  width: 1px;
+  background: linear-gradient(to bottom, var(--line), rgba(236, 230, 217, 0.22));
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 1s var(--ease-out-expo) 0.28s;
+}
+
+.thread::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--bronze);
+  transform: translateX(-50%) scale(0);
+  transition: transform 0.6s var(--ease-out-expo) 1.1s;
+}
+
+.stage[data-revealed='true'] .thread {
+  transform: scaleY(1);
+}
+
+.stage[data-revealed='true'] .thread::after {
+  transform: translateX(-50%) scale(1);
+}
+
+.portal {
+  position: relative;
+  flex: 1 1 auto;
+  width: clamp(260px, 34vw, 520px);
+  min-height: 0;
+  margin-top: -1px;
+  will-change: transform;
+  transform: translate3d(0, calc(var(--pin) * -8vh), 0) scale(calc(1 + var(--pin) * 0.07));
+}
+
+.arch {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.archLine {
+  fill: none;
+  stroke: rgba(236, 230, 217, 0.34);
+  stroke-width: 1;
+  stroke-dasharray: 400;
+  stroke-dashoffset: 400;
+  transition: stroke-dashoffset 1.9s var(--ease-cinematic) 0.3s;
+}
+
+.stage[data-revealed='true'] .archLine {
+  stroke-dashoffset: 0;
+}
+
+.field {
+  opacity: 0;
+  transition: opacity 1.5s ease 0.7s;
+}
+
+.stage[data-revealed='true'] .field {
+  opacity: 1;
+}
+
+.fieldShape {
+  animation: portalBreathe 12s ease-in-out 2.4s infinite;
+}
+
+.phrase {
+  position: absolute;
+  top: 58%;
+  left: 50%;
+  width: min(96%, 460px);
+  transform: translateX(-50%) translateY(14px);
+  text-align: center;
+  opacity: 0;
+  transition:
+    opacity 1.1s ease 1s,
+    transform 1.3s var(--ease-out-expo) 1s;
+}
+
+.phrase::before {
+  content: '';
+  display: block;
+  width: 20px;
+  height: 1px;
+  margin: 0 auto 1.15rem;
+  background: var(--bronze);
+  opacity: 0.72;
+}
+
+.phraseText {
+  color: rgba(236, 230, 217, 0.72);
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 2.4vw, 2.15rem);
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+  text-shadow: 0 14px 44px rgba(0, 0, 0, 0.7);
+}
+
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(8px, 1vw, 12px);
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+  /* Parallax: the row drifts against the portal while the hero is pinned. */
+  transform: translate3d(0, calc(var(--pin) * -22px), 0);
+  will-change: transform;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.9rem;
+  border-radius: 999px;
+  color: var(--bone-soft);
+  font-family: var(--font-sans);
+  font-size: 0.5625rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  opacity: 0;
+  transition: opacity 0.9s ease;
+  transition-delay: calc(1.15s + var(--i) * 0.13s);
+  animation: pillFloat 6.5s ease-in-out infinite;
+  animation-delay: calc(var(--i) * -1.7s);
+}
+
+.stage[data-revealed='true'] .pill {
+  opacity: 1;
+}
+
+.stage .pill::before {
+  opacity: 0.45;
+}
+
+.stage .pill:hover::before {
+  opacity: 0.95;
+}
+
+.pillDot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--bronze-soft);
+  box-shadow: 0 0 8px rgba(199, 166, 107, 0.9);
+}
+
+@keyframes pillFloat {
+  0%,
+  100% {
+    transform: translate3d(0, -3px, 0);
+  }
+  50% {
+    transform: translate3d(0, 4px, 0);
+  }
+}
+
+.stage[data-revealed='true'] .phrase {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+.meta {
+  position: absolute;
+  bottom: max(clamp(20px, 3.2vh, 34px), calc(env(safe-area-inset-bottom) + 16px));
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin: 0;
+  color: var(--muted);
+  font-family: var(--font-sans);
+  font-size: 0.625rem;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity 0.9s ease 1.2s,
+    transform 1s var(--ease-out-expo) 1.2s;
+  pointer-events: none;
+}
+
+.metaLeft {
+  left: clamp(24px, 4vw, 56px);
+}
+
+.metaRight {
+  right: clamp(24px, 4vw, 56px);
+}
+
+.metaDot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--bronze);
+  opacity: 0.9;
+}
+
+.stage[data-revealed='true'] .meta {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.cue {
+  position: absolute;
+  bottom: max(clamp(20px, 3.2vh, 34px), calc(env(safe-area-inset-bottom) + 16px));
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0;
+  opacity: 0;
+  transform: translateX(-50%) translateY(8px);
+  transition:
+    opacity 0.9s ease 1.5s,
+    transform 1s var(--ease-out-expo) 1.5s;
+  pointer-events: none;
+}
+
+.cueText {
+  color: var(--muted);
+  font-family: var(--font-sans);
+  font-size: 0.5625rem;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
+.cueLine {
+  position: relative;
+  width: 1px;
+  height: clamp(22px, 3.6vh, 36px);
+  overflow: hidden;
+  background: linear-gradient(to bottom, var(--line), rgba(236, 230, 217, 0));
+}
+
+.cueLine::after {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--bronze);
+  transform: translateX(-50%);
+  animation: cueDrop 2.8s var(--ease-cinematic) 2s infinite;
+}
+
+.stage[data-revealed='true'] .cue {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+@keyframes portalBreathe {
+  0%,
+  100% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes cueDrop {
+  0% {
+    top: -4px;
+    opacity: 0;
+  }
+  22% {
+    opacity: 1;
+  }
+  78% {
+    opacity: 1;
+  }
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
+}
+
+@media (max-width: 520px) {
+  .portal {
+    width: clamp(250px, 72vw, 380px);
+  }
+
+  .phrase {
+    top: 58%;
+  }
+
+  .phraseText {
+    font-size: 1.05rem;
+  }
+
+  .pills {
+    gap: 6px;
+    margin-top: 0.75rem;
+  }
+
+  .pill {
+    padding: 0.44rem 0.72rem;
+    font-size: 0.5rem;
+    letter-spacing: 0.16em;
+  }
+
+  .meta {
+    font-size: 0.5625rem;
+    letter-spacing: 0.2em;
+  }
+
+  .metaRight {
+    display: none;
+  }
+}
+
+@media (max-height: 620px) and (orientation: landscape) {
+  .thread {
+    flex-basis: 24px;
+  }
+
+  .phrase {
+    top: 54%;
+  }
+
+  .phraseText {
+    font-size: 1rem;
+  }
+
+  .phrase::before {
+    margin-bottom: 0.65rem;
+  }
+
+  .pills {
+    margin-top: 0.55rem;
+    gap: 6px;
+  }
+
+  .pill {
+    padding: 0.42rem 0.7rem;
+    font-size: 0.5rem;
+    letter-spacing: 0.16em;
+  }
+
+  .cue {
+    display: none;
+  }
+}

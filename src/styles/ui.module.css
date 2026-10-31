@@ -1,0 +1,160 @@
+.section {
+  position: relative;
+  z-index: 1;
+  padding: clamp(92px, 13vh, 168px) var(--gutter);
+}
+
+/* A pinned (sticky) section: the track gives the scroll room, .pin stays put. */
+.track {
+  position: relative;
+  z-index: 1;
+  height: var(--track, 320vh);
+  padding: 0;
+}
+
+.pin {
+  position: sticky;
+  top: 0;
+  display: grid;
+  align-content: center;
+  height: 100svh;
+  padding: var(--bar-height) var(--gutter) clamp(32px, 6vh, 72px);
+  /* Chapter hand-off: the pinned screen eases away as its track runs out,
+     so one chapter visually dissolves into the next. */
+  --out: clamp(0, calc((var(--pin) - 0.88) * 8.5), 1);
+  transform: translate3d(0, calc(var(--out) * -3vh), 0) scale(calc(1 - var(--out) * 0.055));
+  opacity: calc(1 - var(--out) * 0.92);
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin: 0 0 clamp(22px, 3.4vh, 40px);
+  color: var(--bronze);
+  font-family: var(--font-sans);
+  font-size: 0.625rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
+.eyebrow::after {
+  content: '';
+  flex: 1 1 auto;
+  width: min(28vw, 260px);
+  height: 1px;
+  background: linear-gradient(90deg, var(--line) 0%, rgba(236, 230, 217, 0) 100%);
+}
+
+.eyebrowIndex {
+  color: var(--smoke);
+}
+
+.headline {
+  margin: 0;
+  color: var(--bone);
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 5vw, 4.4rem);
+  font-weight: 400;
+  line-height: 1.16;
+  letter-spacing: -0.012em;
+  text-wrap: balance;
+}
+
+.lede {
+  max-width: 58ch;
+  margin: clamp(18px, 2.6vh, 30px) 0 0;
+  color: var(--bone-soft);
+  font-size: clamp(0.95rem, 1.15vw, 1.075rem);
+  line-height: 1.75;
+}
+
+/* ---- liquid glass ----------------------------------------------------- */
+
+/*
+ * Base surface: tinted translucency, a specular sweep along the top edge and
+ * a soft outer shadow. Use on anything that should read as a floating pane.
+ */
+.glass {
+  position: relative;
+  isolation: isolate;
+  border: 1px solid var(--glass-edge);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.055) 0%, rgba(255, 255, 255, 0.012) 38%, rgba(9, 9, 8, 0.22) 100%),
+    var(--glass-tint);
+  backdrop-filter: blur(var(--glass-blur)) saturate(1.6) brightness(1.12);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.6) brightness(1.12);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.045),
+    var(--glass-shadow);
+}
+
+/* The moving highlight: a child-less ::before sheen that follows the scroll. */
+.glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--specular);
+  opacity: 0.55;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+
+/* Pill / capsule variant. */
+.pill {
+  composes: glass;
+  border-radius: 999px;
+  padding: 0.6rem 1.05rem;
+}
+
+/* Reveal that keeps its own transform (parallax classes set theirs). */
+.fade {
+  opacity: 0;
+  transition: opacity 0.9s ease;
+}
+
+.fade:nth-child(2) {
+  transition-delay: 0.08s;
+}
+
+.fade:nth-child(3) {
+  transition-delay: 0.16s;
+}
+
+.fade:nth-child(4) {
+  transition-delay: 0.24s;
+}
+
+:global([data-inview='true']) .fade {
+  opacity: 1;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translate3d(0, 26px, 0);
+  transition:
+    opacity 0.85s ease,
+    transform 1.05s var(--ease-out-expo);
+}
+
+.reveal:nth-child(2) {
+  transition-delay: 0.08s;
+}
+
+.reveal:nth-child(3) {
+  transition-delay: 0.16s;
+}
+
+.reveal:nth-child(4) {
+  transition-delay: 0.24s;
+}
+
+:global([data-inview='true']) .reveal {
+  opacity: 1;
+  transform: none;
+}
+

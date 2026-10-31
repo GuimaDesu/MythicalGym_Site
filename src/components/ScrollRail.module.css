@@ -1,0 +1,131 @@
+.rail {
+  position: fixed;
+  top: 50%;
+  right: calc(var(--frame-inset) + 16px);
+  z-index: 55;
+  opacity: 0;
+  transform: translate3d(0, -50%, 0);
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+}
+
+.rail[data-visible='true'] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* The rail line sits behind the dots, sharing their centre. */
+.track {
+  position: absolute;
+  top: 10px;
+  right: 2.5px;
+  bottom: 10px;
+  z-index: 0;
+  width: 1px;
+  background: linear-gradient(
+    180deg,
+    rgba(236, 230, 217, 0) 0%,
+    var(--line) 14%,
+    var(--line) 86%,
+    rgba(236, 230, 217, 0) 100%
+  );
+}
+
+.knob {
+  position: absolute;
+  top: calc(var(--scroll) * 100%);
+  right: -2px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--bronze-soft);
+  box-shadow: 0 0 12px rgba(199, 166, 107, 0.85);
+  transform: translateY(-50%);
+}
+
+.list {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: clamp(16px, 2.6vh, 30px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border: 1px solid rgba(236, 230, 217, 0.32);
+  border-radius: 50%;
+  background: rgba(236, 230, 217, 0.05);
+  /* Points light up as the page progress passes their section. */
+  opacity: clamp(0.3, calc((var(--scroll) - var(--at, 0)) * 26 + 0.34), 1);
+  transition:
+    background-color 0.4s ease,
+    border-color 0.4s ease,
+    box-shadow 0.4s ease,
+    transform 0.5s var(--ease-out-expo);
+}
+
+.item[data-active='true'] .dot {
+  border-color: var(--bronze-soft);
+  background: var(--bronze-soft);
+  box-shadow: 0 0 14px rgba(199, 166, 107, 0.8);
+  transform: scale(1.4);
+}
+
+.label {
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  color: var(--bronze-soft);
+  font-family: var(--font-sans);
+  font-size: 0.5rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translate3d(6px, -50%, 0);
+  transition:
+    opacity 0.4s ease,
+    transform 0.5s var(--ease-out-expo);
+  writing-mode: vertical-rl;
+  pointer-events: none;
+}
+
+.item[data-active='true'] .label,
+.link:hover .label,
+.link:focus-visible .label {
+  opacity: 1;
+  transform: translate3d(0, -50%, 0);
+}
+
+@media (max-width: 900px) {
+  .rail {
+    right: calc(var(--frame-inset) + 4px);
+  }
+
+  .label {
+    display: none;
+  }
+
+  .list {
+    gap: clamp(12px, 2vh, 20px);
+  }
+}
